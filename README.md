@@ -1,5 +1,5 @@
 "# nodejs-restapi" 
 
-Node.js + express + mySQL
+Node.js + express + MySQL
 
-simple crud system
+Simple CRUD System (only server side)
