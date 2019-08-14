@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS `clients` (
 </code>
 
 </br></br>
-<b><i>configuration DB cnnection in clients model</i></b>
+<b><i>configurate DB cnnection in clients model</i></b>
 
 <code>
 const db = mysql.createConnection({
