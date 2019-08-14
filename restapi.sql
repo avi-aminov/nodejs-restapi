@@ -26,36 +26,6 @@ SET time_zone = "+00:00";
 
 
 
---
--- Table structure for table `tenants`
---
-
-DROP TABLE IF EXISTS `tenants`;
-CREATE TABLE IF NOT EXISTS `tenants` (
-  `id` tinyint(3) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `firstName` varchar(10) NOT NULL,
-  `lastName` varchar(10) NOT NULL,
-  `imageName` varchar(10) NOT NULL,
-  `apartmentNumber` varchar(3) NOT NULL,
-  `floor` varchar(3) NOT NULL,
-  `isLeased` bit(1) NOT NULL,
-  `houseCommittee` bit(1) NOT NULL,
-  `adress` varchar(50) NOT NULL,
-  `phoneNumber` varchar(20) NOT NULL,
-  `emial` varchar(25) NOT NULL,
-  `monthlyPayment` varchar(6) NOT NULL,
-  `comment` varchar(200) NOT NULL,
-  `dateEntered` datetime NOT NULL,
-  `dateUpdated` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
-
-INSERT INTO `tenants` (`id`, `firstName`, `lastName`, `imageName`, `apartmentNumber`, `floor`, `isLeased`, `houseCommittee`, `adress`, `phoneNumber`, `emial`, `monthlyPayment`, `comment`, `dateEntered`, `dateUpdated`) VALUES (NULL, 'demo', 'demo', 'null', '4', '2', b'0', b'0', 'tel aviv', '05012301213', 'avi@demo.com', '45', 'no coment', '2019-08-12 00:00:00', CURRENT_TIMESTAMP);
-
-
-
-
-
 
 --
 -- Table structure for table `clients`
@@ -69,17 +39,16 @@ CREATE TABLE IF NOT EXISTS `clients` (
   `age` varchar(3) NOT NULL,
   `adress` varchar(50) NOT NULL,
   `dateEntered` datetime NOT NULL,
-  `dateUpdated` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`clientId`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `clients`
 --
 
-INSERT INTO `clients` (`clientId`, `firstName`, `lastName`, `age`, `adress`, `dateEntered`, `dateUpdated`) VALUES
-(2, 'aaa', 'eee', '', 'tel aviv', '2019-08-11 00:00:00', '2019-08-11 18:50:19'),
-(4, 'bbb', 'ddd', '35', 'ramat gan', '2019-08-11 00:00:00', '2019-08-11 18:50:19');
+INSERT INTO `clients` (`clientId`, `firstName`, `lastName`, `age`, `adress`, `dateEntered`) VALUES
+(2, 'aaa', 'eee', '', 'tel aviv', '2019-08-11 00:00:00'),
+(4, 'bbb', 'ddd', '35', 'ramat gan', '2019-08-11 00:00:00');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

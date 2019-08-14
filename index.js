@@ -2,20 +2,27 @@
 	const mysql = require('mysql');
 	const bodyparser = require('body-parser');
 
-	const tenant = require('./model/tenants');
+	const clients = require('./model/clients');
 	const app = express();
 
 	app.listen(3000, ()=> {
 		console.log("Exrpess server is runing at port No.: 3000");
 	});
 	
-	app.use(bodyparser.urlencoded({extended : false}));
 	
-	
-	/* get tenant by id */
-	app.get("/api/tenant/:id", (req, res)=>{
+	// parse application/x-www-form-urlencoded
+	//bodyParser.urlencoded()
+
+	// parse application/json
+	//bodyParser.json()
+
+	app.use(bodyparser.json());
+
+
+	/* get clients */
+	app.get("/api/clients", (req, res)=>{
 		try{
-			tenant.getTenant(req.params.id, (err, data)=>{
+			clients.getClients(req, (err, data)=>{
 				if(!err){
 					res.send(data);
 				}else{
@@ -28,9 +35,35 @@
 	});
 	
 	
-	/* get all tenants */
-	app.post("/api/tenant/", (req, res)=>{
-		
+	/* get client by id */
+	app.get("/api/client/:id", (req, res)=>{
+		try{
+			clients.getClient(req.params.id, (err, data)=>{
+				if(!err){
+					res.send(data);
+				}else{
+					throw err;
+				}
+			});
+		}catch(error){
+			res.status(500).send(error);
+		}
+	});
+	
+	
+	/* insert client */
+	app.post("/api/client", (req, res)=>{
+		try{
+			clients.insertClient(req.body, (err, data)=>{
+				if(!err){
+					res.send(data);
+				}else{
+					throw err;
+				}
+			});
+		}catch(error){
+			res.status(500).send(error);
+		}
 	});
 
 	
