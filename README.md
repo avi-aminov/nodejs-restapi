@@ -14,7 +14,7 @@ npm install
 </br></br>
 <b><i>Create DB</i></b>
 
-<code>
+<pre>
 CREATE TABLE IF NOT EXISTS `clients` ( 
   `clientId` tinyint(3) UNSIGNED NOT NULL AUTO_INCREMENT,
   `firstName` varchar(10) NOT NULL, 
@@ -24,17 +24,22 @@ CREATE TABLE IF NOT EXISTS `clients` (
   `dateEntered` datetime NOT NULL,
   PRIMARY KEY (`clientId`) 
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8; 
-</code>
+</pre>
 
 </br></br>
-<b><i>configurate DB cnnection in clients model</i></b>
+<b><i>configurate DB cnnection in config file</i></b>
 
-<code>
-const db = mysql.createConnection({
-	host : 'localhost',
-	port : 3306,
-	user : 'root',
-	password : '',
-	database : 'restapi'
-});
-</code>
+<pre>
+module.exports = {
+	dev : {
+		host : 'localhost',
+		port : 3306,
+		user : 'root',
+		password : '',
+		database : 'restapi'
+	},
+	prod: {
+		
+	}
+};
+</pre>
