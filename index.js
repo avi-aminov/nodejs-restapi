@@ -1,25 +1,100 @@
 ﻿	const express = require('express');
-	const mysql = require('mysql');
 	const bodyparser = require('body-parser');
+	const dbConnection = require('./db');
+	
+	//const mysql = require('mysql');
+	const mongoClient = require('mongodb').MongoClient;
+	const objectID = require('mongodb').ObjectID;
 
-	const clients = require('./model/clients');
+	// EXAMPLE FOR MYSQL DB
+	//const clients = require('./model/clients');
+	
 	const app = express();
-
-	app.listen(3000, ()=> {
-		console.log("Exrpess server is runing at port No.: 3000");
-	});
 	
+	dbConnection.connect((err)=>{
+		if(err){
+			return console.log(err);
+		}
+		app.listen(3000, ()=> {
+			console.log("Exrpess server is runing at port No.: 3000");
+		});
+	})	
 	
-	// parse application/x-www-form-urlencoded
-	//bodyParser.urlencoded()
-
-	// parse application/json
-	//bodyParser.json()
-
+	app.use(bodyparser.urlencoded({ extended : true}));
 	app.use(bodyparser.json());
+	
+	app.get('/api/artists', (req, res)=>{
+		dbConnection.get().collection("artists").find().toArray((err, result)=>{
+			if(err){
+				console.log(err);
+				return res.sendStatus(500);
+			}
+			res.send(result);
+		});	
+	})
+	
+	
+	app.post('/api/artists', (req, res)=>{
+		dbConnection.get().collection('artists').insertOne(
+		{name : req.body.name}, 
+		(err, result)=>{
+			if(err){
+				console.log(err);
+				return res.sendStatus(500);
+			}
+			res.send(result);
+		});
+	})
 
+	
+	app.get('/api/artist/:id', (req, res)=>{
+		dbConnection.get().collection("artists").findOne(
+		{ _id: objectID(req.params.id)}, 
+		(err, doc)=>{
+			if(err){
+				console.log(err);
+				return res.sendStatus(500);
+			}
+			res.send(doc);
+		})
+	})
+	
+	
+	app.put('/api/artist/:id', (req, res)=>{
+		dbConnection.get().collection("artists").updateOne(
+			{	_id: objectID(req.params.id)},
+			{ 	$set: {name: req.body.name}}, 
+			(err, result)=>{
+				if(err){
+					console.log(err);
+					return res.sendStatus(500);
+				}
+				res.sendStatus(200);
+			}
+		)
+	})
+	
+	
+	app.delete('/api/artist/:id', (req, res)=>{
+		dbConnection.get().collection("artists").deleteOne(
+		{ _id: objectID(req.params.id)}, 
+		(err, doc)=>{
+			if(err){
+				console.log(err);
+				return res.sendStatus(500);
+			}
+			res.sendStatus(200);
+		})
+	})
+	
+	
+	
 
-	/* get clients */
+	
+	
+	// EXAMPLE FOR MYSQL DB
+	// get clients
+	/*
 	app.get("/api/clients", (req, res)=>{
 		try{
 			clients.getClients(req, (err, data)=>{
@@ -33,9 +108,7 @@
 			res.status(500).send(error);
 		}
 	});
-	
-	
-	/* get client by id */
+	// get client by id
 	app.get("/api/client/:id", (req, res)=>{
 		try{
 			clients.getClient(req.params.id, (err, data)=>{
@@ -49,9 +122,7 @@
 			res.status(500).send(error);
 		}
 	});
-	
-	
-	/* insert client */
+	//insert client
 	app.post("/api/client", (req, res)=>{
 		try{
 			clients.insertClient(req.body, (err, data)=>{
@@ -64,112 +135,5 @@
 		}catch(error){
 			res.status(500).send(error);
 		}
-	});
-
-	
-	/* edit tenant by id */
-	app.put("/api/tenant/:id", (req, res)=>{
-		
-	});	
-
-	
-	/* delete tenant by id */
-	app.delete("/api/tenant/:id", (req, res)=>{
-		
-	});	
-
-
-	
-	/*
-	let db = mysql.createConnection({
-		host: 'localhost',
-		port : 3306,
-		user: 'root',
-		password: '',
-		database: 'restapi'
-	});
-
-
-
-	db.connect((err)=>{
-		if(!err){
-			console.log("mysqlConnection connected");
-		}else{
-			console.log("mysqlConnection error \n" + JSON.stringify(err,undefined,2));
-		}
-	});
-
-
-
-	app.listen(3000, ()=> {
-		console.log("Exrpess server is runing at port no: 3000");
-	});
-
-
-	// Get all clients
-	app.get('/clients', (req, res)=>{
-		db.query('SELECT * FROM clients', (err, rows, fields)=>{
-			if(!err){
-				res.send(rows);
-			}else{
-				console.log(err);
-			}
-		});
-	});
-
-
-	// Get clients by ID
-	app.get('/clients/:id', (req, res)=>{
-		db.query('SELECT * FROM `clients` WHERE clientId = ?', [req.params.id],
-		(err, rows, fields)=>{
-			if(!err){
-				res.send(rows);
-			}else{
-				console.log(err);
-			}
-		});
-	});
-
-
-	// Delete clients by ID
-	app.delete('/clients/:id', (req, res)=>{
-		db.query('DELETE FROM clients WHERE clientId = ?', [req.params.id],
-		(err, rows, fields)=>{
-			if(!err){
-				res.send('Deleted seccessfully');
-			}else{
-				console.log(err);
-			}
-		});
-	});
-
-
-	// Insert clients
-	app.post('/add-client/', (req, res, next)=>{
-		let emp = req.body;
-		let firstName = '';
-		
-		if(emp.firstName){
-			firstName = emp.firstName
-		}
-		console.log(emp);
-		
-		var sql = "INSERT INTO `clients` (`clientId`, `firstName`, `lastName`, `age`, `adress`, `dateEntered`, `dateUpdated`) VALUES ?";
-		var values = [
-			[null, firstName, 'last Name 4', 36, 'your adress', '2019-08-11 00:00:00', '2019-08-11 18:50:19']
-		];
-	  
-		db.query(sql, [values], (err, result, fields)=>{
-			if (err){
-				throw err;
-			} 
-			
-			console.log(result);
-			console.log("Number of rows affected : " + result.affectedRows);
-			console.log("Number of records affected with warning : " + result.warningCount);
-			console.log("Message from MySQL Server : " + result.message);
-		
-		});
-		//next();
 	});
 	*/
