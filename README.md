@@ -11,6 +11,3 @@ git clone https://github.com/avi-aminov/nodejs-restapi.git
 
 npm install
 
-</br></br>
-<b><i>Create DB</i></b>
-
